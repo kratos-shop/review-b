@@ -2,12 +2,13 @@ package biz
 
 import (
 	"context"
+	pb "review-b/api/business/v1"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type ReviewReplyRepo interface {
-	CreateReviewReply(ctx context.Context) error
+	CreateReviewReply(ctx context.Context, req *pb.ReplyReviewRequest) (resp *pb.ReplyReviewReply, err error)
 }
 
 type ReviewReplyUsecase struct {
@@ -22,12 +23,13 @@ func NewReviewReplyUsecase(repo ReviewReplyRepo, logger log.Logger) *ReviewReply
 	}
 }
 
-func (uc *ReviewReplyUsecase) CreateReviewReply(ctx context.Context) error {
-	uc.log.Infof("SaveReviewReplyAndUpdateReview: %+v", ctx)
-	err := uc.repo.CreateReviewReply(ctx)
+func (uc *ReviewReplyUsecase) CreateReviewReply(ctx context.Context, req *pb.ReplyReviewRequest) (resp *pb.ReplyReviewReply, err error) {
+	uc.log.Infof("SaveReviewReplyAndUpdateReview: %+v", req)
+	resp, err = uc.repo.CreateReviewReply(ctx, req)
 	if err != nil {
 		uc.log.Errorf("CreateReviewReply err: %+v", err)
-		return err
+		return nil, err
 	}
-	return nil
+	uc.log.Infof("CreateReviewReply success: %+v", resp)
+	return resp, nil
 }

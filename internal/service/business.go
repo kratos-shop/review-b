@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	pb "review-b/api/business/v1"
 	"review-b/internal/biz"
@@ -21,5 +22,13 @@ func NewBusinessService(uc *biz.ReviewReplyUsecase, logger log.Logger) *Business
 }
 
 func (s *BusinessService) ReplyReview(ctx context.Context, req *pb.ReplyReviewRequest) (*pb.ReplyReviewReply, error) {
-	return &pb.ReplyReviewReply{}, nil
+	s.log.Infof("ReplyReview: %+v", req)
+	fmt.Printf("ReplyReview: %+v", req)
+	resp, err := s.uc.CreateReviewReply(ctx, req)
+	if err != nil {
+		s.log.Errorf("ReplyReview err: %+v", err)
+		return nil, err
+	}
+	s.log.Infof("ReplyReview success: %+v", resp)
+	return resp, nil
 }

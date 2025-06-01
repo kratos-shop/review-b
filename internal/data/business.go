@@ -5,6 +5,9 @@ import (
 
 	"review-b/internal/biz"
 
+	pb "review-b/api/business/v1"
+	v1 "review-b/api/review/v1"
+
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -20,7 +23,19 @@ func NewReviewReplyRepo(data *Data, logger log.Logger) biz.ReviewReplyRepo {
 	}
 }
 
-func (r *reviewReplyRepo) CreateReviewReply(ctx context.Context) error {
-	r.log.Infof("CreateReviewReply: %+v", ctx)
-	return nil
+func (r *reviewReplyRepo) CreateReviewReply(ctx context.Context, req *pb.ReplyReviewRequest) (resp *pb.ReplyReviewReply, err error) {
+	r.log.Infof("CreateReviewReply: %+v", req)
+	grpcResp, err := r.data.grpcClient.ReplyReview(ctx, &v1.ReplyReviewRequest{
+		ReviewId:  req.ReviewId,
+		StoreId:   req.StoreId,
+		Content:   req.Content,
+		PicInfo:   req.PicInfo,
+		VideoInfo: req.VideoInfo,
+	})
+	if err != nil {
+		r.log.Errorf("CreateReviewReply err: %+v", err)
+		return nil, err
+	}
+	r.log.Infof("CreateReviewReply success: %+v", grpcResp)
+	return &pb.ReplyReviewReply{Id: grpcResp.Id}, nil
 }
