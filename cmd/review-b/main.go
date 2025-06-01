@@ -57,6 +57,7 @@ func main() {
 		"service.version", Version,
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
+		"file", log.Caller(4),
 	)
 	c := config.New(
 		config.WithSource(
@@ -74,7 +75,12 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
+	var reg conf.Registry
+	if err := c.Scan(&reg); err != nil {
+		panic(err)
+	}
+
+	app, cleanup, err := wireApp(bc.Server, bc.Data, &reg, logger)
 	if err != nil {
 		panic(err)
 	}
