@@ -32,3 +32,14 @@ func (s *BusinessService) ReplyReview(ctx context.Context, req *pb.ReplyReviewRe
 	s.log.Infof("ReplyReview success: %+v", resp)
 	return resp, nil
 }
+
+func (s *BusinessService) AppealReview(ctx context.Context, req *pb.AppealReviewRequest) (*pb.AppealReviewReply, error) {
+	s.log.Infof("AppealReview: %+v", req)
+	resp, err := s.uc.CreateReviewAppeal(ctx, req)
+	if err != nil {
+		s.log.Errorf("AppealReview err: %+v", err)
+		return nil, err
+	}
+	s.log.Infof("AppealReview success: %+v", resp)
+	return resp, nil
+}

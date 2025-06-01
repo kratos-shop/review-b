@@ -9,6 +9,7 @@ import (
 
 type ReviewReplyRepo interface {
 	CreateReviewReply(ctx context.Context, req *pb.ReplyReviewRequest) (resp *pb.ReplyReviewReply, err error)
+	CreateReviewAppeal(ctx context.Context, req *pb.AppealReviewRequest) (resp *pb.AppealReviewReply, err error)
 }
 
 type ReviewReplyUsecase struct {
@@ -33,3 +34,15 @@ func (uc *ReviewReplyUsecase) CreateReviewReply(ctx context.Context, req *pb.Rep
 	uc.log.Infof("CreateReviewReply success: %+v", resp)
 	return resp, nil
 }
+
+func (uc *ReviewReplyUsecase) CreateReviewAppeal(ctx context.Context, req *pb.AppealReviewRequest) (resp *pb.AppealReviewReply, err error) {
+	uc.log.Infof("CreateReviewAppeal: %+v", req)
+	resp, err = uc.repo.CreateReviewAppeal(ctx, req)
+	if err != nil {
+		uc.log.Errorf("CreateReviewAppeal err: %+v", err)
+		return nil, err
+	}
+	uc.log.Infof("CreateReviewAppeal success: %+v", resp)
+	return resp, nil
+}
+
