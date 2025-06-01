@@ -47,6 +47,8 @@ api:
 .PHONY: validate
 # generate validate proto
 validate:
+	@echo "Cleaning old generated files..."
+	if exist api\business\v1\business.pb.go del /f api\business\v1\business.pb.go
 	@echo "Generating validate proto files..."
 	protoc --proto_path=./api \
 	       --proto_path=./third_party \

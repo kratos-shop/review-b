@@ -42,18 +42,17 @@ func (r *reviewReplyRepo) CreateReviewReply(ctx context.Context, req *pb.ReplyRe
 
 func (r *reviewReplyRepo) CreateReviewAppeal(ctx context.Context, req *pb.AppealReviewRequest) (resp *pb.AppealReviewReply, err error) {
 	r.log.Infof("CreateReviewAppeal: %+v", req)
-	// grpcResp, err := r.data.grpcClient.AppealReview(ctx, &v1.AppealReviewRequest{
-	// 	ReviewId:  req.ReviewId,
-	// 	StoreId:   req.StoreId,
-	// 	Content:   req.Content,
-	// 	PicInfo:   req.PicInfo,
-	// 	VideoInfo: req.VideoInfo,
-	// })
-	// if err != nil {
-	// 	r.log.Errorf("CreateReviewAppeal err: %+v", err)
-	// 	return nil, err
-	// }
-	// r.log.Infof("CreateReviewAppeal success: %+v", grpcResp)
-	// return &pb.AppealReviewReply{Id: grpcResp.Id}, nil
-	return &pb.AppealReviewReply{Id: 1}, nil
+	grpcResp, err := r.data.grpcClient.AppealReview(ctx, &v1.AppealReviewRequest{
+		ReviewId:  req.ReviewId,
+		StoreId:   req.StoreId,
+		Content:   req.Content,
+		PicInfo:   req.PicInfo,
+		VideoInfo: req.VideoInfo,
+	})
+	if err != nil {
+		r.log.Errorf("CreateReviewAppeal err: %+v", err)
+		return nil, err
+	}
+	r.log.Infof("CreateReviewAppeal success: %+v", grpcResp)
+	return &pb.AppealReviewReply{Id: grpcResp.Id}, nil
 }
